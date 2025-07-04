@@ -7,7 +7,7 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { motion } from "framer-motion";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 const features = [
@@ -44,6 +44,37 @@ const gradientVariants = {
   },
 };
 
+const valueProps = [
+  "Share links in seconds",
+  "Track every click",
+  "Your links, your brand",
+  "Analytics made simple",
+  "Safe & reliable redirects",
+];
+
+function AnimatedValueProps({ dark }) {
+  const [index, setIndex] = useState(0);
+  // Cycle through valueProps every 2.5 seconds
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setIndex((i) => (i + 1) % valueProps.length);
+    }, 2500);
+    return () => clearInterval(interval);
+  }, []);
+  return (
+    <motion.span
+      key={index}
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -20 }}
+      transition={{ duration: 0.5 }}
+      className={`text-3xl sm:text-4xl font-bold text-center drop-shadow-lg ${dark ? 'text-white' : 'text-primary'}`}
+    >
+      {valueProps[index]}
+    </motion.span>
+  );
+}
+
 const LandingPage = () => {
   const [longUrl, setLongUrl] = useState("");
   const navigate = useNavigate();
@@ -62,11 +93,16 @@ const LandingPage = () => {
         transition={{ duration: 0.7 }}
         className="w-full flex flex-col items-center mt-10"
       >
-        <img
-          src="/logo.png"
-          alt="Logo"
-          className="w-20 h-20 mb-4 drop-shadow-lg rounded-full border-4 border-primary bg-white"
-        />
+        {/* Animated Badge */}
+        <motion.div
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7 }}
+          className="mb-4 px-6 py-2 rounded-full bg-gradient-to-r from-green-400 via-blue-400 to-purple-500 text-white font-semibold text-lg shadow-lg flex items-center gap-2"
+        >
+          <span className="text-2xl">✨</span>
+          Lightning-fast, secure, and free
+        </motion.div>
         <motion.h1
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
@@ -102,35 +138,20 @@ const LandingPage = () => {
             Shorten!
           </Button>
         </motion.form>
+        {/* Animated Glassmorphism Banner */}
         <motion.div
           initial={{ opacity: 0, scale: 0.98 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ delay: 0.8, duration: 0.7 }}
-          className="w-full max-w-3xl rounded-xl shadow-xl my-8 relative overflow-hidden"
+          className="w-full max-w-3xl rounded-3xl shadow-2xl my-8 relative overflow-hidden bg-gradient-to-br from-gray-900 via-indigo-900 to-purple-900 backdrop-blur-md bg-opacity-70 border border-white/20"
         >
-          <img
-            src="/a-man-celebrating-in-front-of-his-laptop-after-he--4d6ZDLiwQXOoZMFB4c6wrg-VXDhoEI-QjWFcfUQG8eG0g.jpeg"
-            alt="Celebrating Success Banner"
-            className="w-full h-64 object-cover object-center"
-          />
-          {/* Animated multi-color gradient overlay */}
           <motion.div
-            initial={{ opacity: 0.7, background: "linear-gradient(135deg, #fbc2eb 0%, #a6c1ee 100%)" }}
-            animate={{
-              opacity: [0.7, 0.5, 0.7],
-              background: [
-                "linear-gradient(135deg, #fbc2eb 0%, #a6c1ee 100%)",
-                "linear-gradient(135deg, #a1c4fd 0%, #c2e9fb 100%)",
-                "linear-gradient(135deg, #f8fafc 0%, #e0c3fc 100%)",
-                "linear-gradient(135deg, #fbc2eb 0%, #a6c1ee 100%)"
-              ]
-            }}
-            transition={{ duration: 10, repeat: Infinity, repeatType: "reverse" }}
-            className="absolute inset-0 mix-blend-multiply"
-            style={{ pointerEvents: 'none' }}
-          />
-          {/* Subtle dark gradient for text readability */}
-          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-white/10 to-transparent" />
+            className="flex flex-col items-center justify-center py-16"
+            initial={false}
+            animate={{}}
+          >
+            <AnimatedValueProps dark />
+          </motion.div>
         </motion.div>
       </motion.div>
 
@@ -173,7 +194,7 @@ const LandingPage = () => {
         <Accordion type="multiple" collapsible className="w-full bg-card rounded-xl shadow-md border border-border">
           <AccordionItem value="item-1">
             <AccordionTrigger>
-              How does the Trimrr URL shortener work?
+              How does the Link-Shorts URL shortener work?
             </AccordionTrigger>
             <AccordionContent>
               When you enter a long URL, our system generates a shorter version of that URL. This shortened URL redirects to the original long URL when accessed.
